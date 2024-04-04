@@ -9,33 +9,33 @@ namespace CompleteProject
         //---------
         //Variables
         //---------
-                                 // Referencia al Script PlayerHealth
-                                // Los prefabs de los enemigos que se usarán en el spawn
-                               // Los tiempos que habrá entre cada spawn de cada enemigo
-                               // Los transforms de los puntos de spawn de cada enemigo
+        public PlayerHealth playerHealth;       // Referencia al Script PlayerHealth
+        public GameObject[] enemys;             // Los prefabs de los enemigos que se usarán en el spawn
+        public float[] spawnTimes;              // Los tiempos que habrá entre cada spawn de cada enemigo
+        public Transform[] spawnPoints;         // Los transforms de los puntos de spawn de cada enemigo
 
         //-----
         //Start
         //-----
         void Start()
         {
-            
-                
+            for (int i = 0; i < enemys.Length; i++)
+                StartCoroutine(Spawn(enemys[i], spawnTimes[i], spawnPoints[i]));
         }
         //-----------
         //Ienumerator
         //-----------
-        
-        
-            
+        IEnumerator Spawn(GameObject enemy, float spawnTime, Transform spawnPoint)
+        {
+            yield return new WaitForSeconds(spawnTime);
             // ¿El jugador ya no tiene vida?
-            
-            
+            if (playerHealth.currentHealth <= 0f)
+            {
                 // Salimos de la función
-                
-            
-            
-            
-        
+                yield break;
+            }
+            Instantiate(enemy, spawnPoint.position, spawnPoint.rotation);
+            StartCoroutine(Spawn(enemy, spawnTime, spawnPoint));
+        }
     }
 }
